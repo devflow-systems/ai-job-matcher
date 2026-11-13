@@ -291,4 +291,35 @@
     async function fetchJobs(keyword = '', category = '') {
       document.getElementById('jobsList').innerHTML = '<div class="card" style="text-align:center;color:#64748b;font-size:13px;">Loading live remote & tech positions...</div>';
       try {
+                let url = 'https://remotive.com/api/remote-jobs?limit=24';
+        if (keyword) url += `&search=${encodeURIComponent(keyword)}`;
+        if (category) url += `&category=${encodeURIComponent(category)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        allJobs = (data.jobs || []).slice(0, 20);
+      } catch (e) { allJobs = []; }
+      renderJobs();
+    }
+
+    document.getElementById('searchForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      fetchJobs(document.getElementById('keywordInput').value.trim(), document.getElementById('categorySelect').value);
+    });
+    document.getElementById('analyzeCvBtn').addEventListener('click', () => {
+      localStorage.setItem('careermatch_cv', cvInput.value);
+      cvStatusBadge.textContent = cvInput.value.trim().length > 4 ? 'Custom CV Active' : 'Default Profile';
+      cvStatusBadge.className = cvInput.value.trim().length > 4 ? 'badge-green' : 'badge-gray';
+      renderJobs();
+    });
+    document.getElementById('clearCvBtn').addEventListener('click', () => {
+      cvInput.value = ''; localStorage.removeItem('careermatch_cv');
+      cvStatusBadge.textContent = 'Default Profile'; cvStatusBadge.className = 'badge-gray';
+      renderJobs();
+    });
+    document.getElementById('sortSelect').addEventListener('change', renderJobs);
+    fetchJobs();
+  </script>
+</body>
+</html>
+
 
