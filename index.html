@@ -4,163 +4,116 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CareerMatch AI — Smart Tech & Remote Job Search</title>
-  <script src="https://tailwindcss.com"></script>
   <link href="https://googleapis.com" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-    .match-ring { transition: all 0.4s ease; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.5; }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    /* Header */
+    header { background: #ffffff; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 30; }
+    .nav-inner { height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .logo-box { width: 36px; height: 36px; border-radius: 10px; background: #2563eb; color: #fff; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+    .brand-name { font-weight: 800; font-size: 18px; color: #0f172a; }
+    .ai-pill { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; margin-left: 4px; }
+    .nav-links { display: flex; align-items: center; gap: 14px; }
+    .nav-link-sec { font-size: 13px; font-weight: 600; color: #475569; }
+    .nav-link-sec:hover { color: #2563eb; }
+    .btn-dark { background: #0f172a; color: #fff; font-size: 13px; font-weight: 600; padding: 9px 14px; border-radius: 10px; transition: 0.2s; }
+    .btn-dark:hover { background: #1e293b; }
+    /* Hero */
+    .hero { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-bottom: 1px solid #e2e8f0; padding: 44px 0; text-align: center; }
+    .live-badge { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 99px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857; font-size: 12px; font-weight: 600; margin-bottom: 16px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
+    .hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; color: #0f172a; letter-spacing: -0.02em; max-width: 760px; margin: 0 auto; line-height: 1.15; }
+    .hero h1 span { color: #2563eb; }
+    .hero p { color: #475569; font-size: 16px; max-width: 620px; margin: 14px auto 0; }
+    /* Search Box */
+    .search-box { max-width: 780px; margin: 28px auto 0; background: #fff; padding: 8px; border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06); display: flex; flex-wrap: wrap; gap: 8px; }
+    .search-input-wrap { flex: 1 1 260px; display: flex; align-items: center; padding: 0 12px; }
+    .search-input-wrap input { width: 100%; border: none; outline: none; font-size: 14px; color: #0f172a; padding: 10px 0; }
+    .search-select-wrap { flex: 0 1 200px; display: flex; align-items: center; padding: 0 12px; border-left: 1px solid #e2e8f0; }
+    .search-select-wrap select { width: 100%; border: none; outline: none; font-size: 14px; color: #334155; background: transparent; padding: 10px 0; }
+    .btn-primary { background: #2563eb; color: #fff; border: none; font-size: 14px; font-weight: 700; padding: 12px 24px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+    .btn-primary:hover { background: #1d4ed8; }
+    /* Main Grid */
+    .main-grid { display: grid; grid-template-columns: 340px 1fr; gap: 24px; padding: 32px 0 60px; align-items: start; }
+    @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } .search-select-wrap { border-left: none; border-top: 1px solid #e2e8f0; flex: 1 1 100%; } }
+    /* Cards */
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); margin-bottom: 18px; }
+    .card-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .card-title { font-size: 15px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+    .ai-icon { background: #dbeafe; color: #2563eb; font-size: 11px; font-weight: 800; padding: 3px 7px; border-radius: 6px; }
+    .badge-gray { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 99px; background: #f1f5f9; color: #475569; }
+    .badge-green { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 99px; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .muted-xs { font-size: 12px; color: #64748b; margin-bottom: 12px; }
+    textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px 12px; font-family: inherit; font-size: 12px; color: #1e293b; resize: vertical; outline: none; }
+    textarea:focus { border-color: #2563eb; }
+    .btn-row { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-sm-blue { flex: 1; background: #2563eb; color: #fff; border: none; font-size: 12px; font-weight: 700; padding: 10px; border-radius: 10px; cursor: pointer; }
+    .btn-sm-gray { background: #f1f5f9; color: #475569; border: none; font-size: 12px; font-weight: 600; padding: 10px 14px; border-radius: 10px; cursor: pointer; }
+    /* Promo Card */
+    .promo-dark { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; border-radius: 16px; padding: 20px; margin-bottom: 18px; }
+    .promo-tag { display: inline-block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(251, 191, 36, 0.2); color: #fcd34d; padding: 3px 9px; border-radius: 99px; margin-bottom: 10px; }
+    .promo-dark h3 { font-size: 15px; font-weight: 700; line-height: 1.35; }
+    .promo-dark p { font-size: 12px; color: #cbd5e1; margin-top: 8px; }
+    .btn-white { display: block; text-align: center; background: #fff; color: #0f172a; font-size: 12px; font-weight: 700; padding: 10px; border-radius: 10px; margin-top: 14px; }
+    /* Feed Header */
+    .feed-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+    .feed-top h2 { font-size: 18px; font-weight: 800; color: #0f172a; }
+    .sort-select { background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px 12px; font-size: 12px; font-weight: 600; color: #334155; }
+    /* Job Card */
+    .job-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; margin-bottom: 16px; transition: 0.2s; }
+    .job-card:hover { border-color: #93c5fd; box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.08); }
+    .job-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .job-meta { font-size: 12px; color: #64748b; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+    .job-meta strong { color: #334155; }
+    .job-title { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    .job-title a:hover { color: #2563eb; }
+    .job-salary { font-size: 14px; font-weight: 700; color: #047857; }
+    .match-box { text-align: center; padding: 8px 14px; border-radius: 12px; min-width: 84px; }
+    .match-high { background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857; }
+    .match-med { background: #fffbeb; border: 1px solid #fde68a; color: #b45309; }
+    .match-num { font-size: 20px; font-weight: 800; display: block; line-height: 1.1; }
+    .match-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .metrics-bar { display: grid; grid-template-columns: repeat(3, 1fr); background: #f8fafc; border-radius: 12px; padding: 10px; margin-top: 16px; text-align: center; border: 1px solid #f1f5f9; }
+    .metric-lbl { font-size: 11px; color: #64748b; }
+    .metric-val { font-size: 13px; font-weight: 700; color: #0f172a; }
+    .job-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { font-size: 11px; font-weight: 500; background: #f1f5f9; color: #475569; padding: 4px 9px; border-radius: 6px; }
+    .btn-apply { background: #2563eb; color: #fff; font-size: 12px; font-weight: 700; padding: 10px 18px; border-radius: 10px; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-apply:hover { background: #1d4ed8; }
+    .inline-banner { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 16px; padding: 18px 20px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    footer { background: #fff; border-top: 1px solid #e2e8f0; padding: 28px 0; font-size: 12px; color: #64748b; }
+    .footer-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; }
+    .footer-links { display: flex; gap: 16px; }
+    .footer-links a { text-decoration: underline; }
   </style>
 </head>
-<body class="text-slate-800 antialiased">
+<body>
 
-  <!-- Top Navbar -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-extrabold text-lg shadow-sm">
-          CM
-        </div>
+  <header>
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="logo-box">CM</div>
         <div>
-          <span class="font-bold text-lg tracking-tight text-slate-900">CareerMatch</span>
-          <span class="ml-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100">AI</span>
+          <span class="brand-name">CareerMatch</span>
+          <span class="ai-pill">AI</span>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="https://sql-gym.framer.website" target="_blank" rel="noopener" class="hidden sm:inline-flex items-center text-sm font-medium text-slate-600 hover:text-blue-600 transition">
-          Practice SQL ↗
-        </a>
-        <a href="https://sql-gym.framer.website" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-lg transition shadow-sm">
-          <span>2027 Notion Bundle ($3)</span>
-        </a>
+      <div class="nav-links">
+        <a href="https://sql-gym.framer.website" target="_blank" rel="noopener" class="nav-link-sec">Practice SQL ↗</a>
+        <a href="https://florinbus.gumroad.com/l/kuqxa" target="_blank" rel="noopener" class="btn-dark">2027 Notion Bundle ($3)</a>
       </div>
     </div>
   </header>
 
-  <!-- Hero & Search Bar -->
-  <section class="bg-gradient-to-b from-white to-slate-50 border-b border-slate-200/80 pt-10 pb-10">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold mb-4">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+  <section class="hero">
+    <div class="container">
+      <div class="live-badge">
+        <span class="dot"></span>
         Live Remote & Tech Jobs • Instant AI CV Compatibility Score
       </div>
-      <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-        Get interviews <span class="text-blue-600">3x faster</span> with AI Job Matching
-      </h1>
-      <p class="mt-3 text-slate-600 text-base sm:text-lg max-w-2xl mx-auto">
-        Search verified remote & tech roles, paste your resume or skills once, and instantly see your exact match score before applying.
-      </p>
-
-      <!-- Search Box -->
-      <form id="searchForm" class="mt-7 max-w-3xl mx-auto bg-white p-2 rounded-2xl shadow-md border border-slate-200 flex flex-col sm:flex-row gap-2">
-        <div class="flex-1 flex items-center px-3">
-          <svg class="w-5 h-5 text-slate-400 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <input id="keywordInput" type="text" placeholder="Job title or skill (e.g. SQL, Frontend, Data, Python)..." class="w-full py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none" />
-        </div>
-        <div class="sm:w-48 flex items-center px-3 border-t sm:border-t-0 sm:border-l border-slate-200 pt-2 sm:pt-0">
-          <svg class="w-5 h-5 text-slate-400 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path></svg>
-          <select id="categorySelect" class="w-full py-2.5 text-sm text-slate-700 bg-transparent focus:outline-none">
-            <option value="">All Tech Categories</option>
-            <option value="software-dev">Software Development</option>
-            <option value="data">Data & SQL</option>
-            <option value="devops">DevOps & Cloud</option>
-            <option value="product">Product & Design</option>
-            <option value="qa">QA & Testing</option>
-          </select>
-        </div>
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-3 rounded-xl transition shadow-sm cursor-pointer">
-          Find Jobs
-        </button>
-      </form>
-    </div>
-  </section>
-
-  <!-- Main Content Grid -->
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-
-      <!-- Left Sidebar: AI CV Matcher & Cross-Sell -->
-      <aside class="lg:col-span-4 space-y-5 lg:sticky lg:top-22">
-        <!-- AI Resume Scorer Card -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <h2 class="font-bold text-slate-900 text-base flex items-center gap-2">
-              <span class="w-6 h-6 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">AI</span>
-              Resume & Skills Matcher
-            </h2>
-            <span id="cvStatusBadge" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">Default Profile</span>
-          </div>
-          <p class="text-xs text-slate-500 mb-3">
-            Paste your resume text or key skills below to recalculate your real-time match score on every job card.
-          </p>
-          <textarea id="cvInput" rows="5" placeholder="Example: Senior SQL & Data Analyst with 4 years experience in Python, PostgreSQL, React, AWS, Agile, Tableau, REST APIs..." class="w-full rounded-xl border border-slate-200 p-3 text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"></textarea>
-          <div class="mt-3 flex gap-2">
-            <button id="analyzeCvBtn" type="button" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2.5 px-3 rounded-xl transition cursor-pointer">
-              Recalculate Match %
-            </button>
-            <button id="clearCvBtn" type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-medium py-2.5 px-3 rounded-xl transition cursor-pointer">
-              Reset
-            </button>
-          </div>
-        </div>
-
-        <!-- Cross-Sell Card 1: Notion Bundle -->
-        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 text-white shadow-sm">
-          <span class="inline-block text-[11px] font-bold uppercase tracking-wider bg-amber-400/20 text-amber-300 px-2.5 py-0.5 rounded-full mb-2.5">
-            2027 Career Toolkit
-          </span>
-          <h3 class="font-bold text-base leading-snug">
-            Track Every Application & Ace Your Coding Interviews
-          </h3>
-          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
-            Stop losing track of salaries and interview rounds. Get our 2-in-1 Notion Job Hunt & Coding Prep System (25% off).
-          </p>
-          <a href="https://sql-gym.framer.website" target="_blank" rel="noopener" class="mt-4 block w-full text-center bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs py-2.5 rounded-xl transition">
-            Get 2-in-1 Notion Bundle ($3) →
-          </a>
-        </div>
-
-        <!-- Cross-Sell Card 2: SQLGym -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-          <div class="flex items-center gap-2 text-blue-600 font-bold text-xs mb-1">
-            <span>💻 INTERACTIVE SQL PRACTICE</span>
-          </div>
-          <h3 class="font-bold text-slate-900 text-sm">
-            Preparing for a Data or Backend Interview?
-          </h3>
-          <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-            Sharpen your query skills with real-world SQL challenges before your technical round.
-          </p>
-          <a href="https://sql-gym.framer.website" target="_blank" rel="noopener" class="mt-3 inline-flex items-center text-xs font-bold text-blue-600 hover:text-blue-700">
-            Practice Free on SQLGym ↗
-          </a>
-        </div>
-      </aside>
-
-      <!-- Right Column: Job Results Feed -->
-      <section class="lg:col-span-8">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <h2 class="font-bold text-slate-900 text-lg" id="resultsHeading">Top AI-Matched Remote & Tech Jobs</h2>
-            <p class="text-xs text-slate-500" id="resultsSubheading">Loading verified positions...</p>
-          </div>
-          <select id="sortSelect" class="text-xs font-medium bg-white border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:outline-none">
-            <option value="match">Sort by: Highest Match %</option>
-            <option value="recent">Sort by: Most Recent</option>
-          </select>
-        </div>
-
-        <!-- Loading Skeleton -->
-        <div id="loadingState" class="space-y-4">
-          <div class="bg-white rounded-2xl border border-slate-200 p-6 animate-pulse">
-            <div class="h-4 bg-slate-200 rounded w-1/3 mb-3"></div>
-            <div class="h-6 bg-slate-200 rounded w-2/3 mb-4"></div>
-            <div class="h-16 bg-slate-100 rounded-xl"></div>
-          </div>
-          <div class="bg-white rounded-2xl border border-slate-200 p-6 animate-pulse">
-            <div class="h-4 bg-slate-200 rounded w-1/4 mb-3"></div>
-            <div class="h-6 bg-slate-200 rounded w-1/2 mb-4"></div>
-            <div class="h-16 bg-slate-100 rounded-xl"></div>
-          </div>
-        </div>
-
-        <!-- Jobs Container -->
+      <h1>Get interviews <span>3x faster</span> with AI Job Matching</h1>
